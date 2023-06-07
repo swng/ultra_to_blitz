@@ -1,16 +1,26 @@
 <html>
-    <script defer src="./script.js"></script>
-    <head>
-		<title>Ultra to Blitz</title>
-	</head>
-	<body>
-		<h1>Convert an Ultra Run to its equivalent Blitz score</h1>
-		Paste in the Scoring Playlist into the text field: (fortissim2's WR ultra is pre-included as an example)
-        <br>
-        <textarea id="ultra" name="ultra" rows="40" cols="26"></textarea>
-        <br>
-        <button type="button" onclick="ultra_to_blitz()">Ultra to Blitz</button>
-        <br>
-        <textarea id="output" name="output"></textarea>
-	</body>
+<script defer src="./script.js"></script>
+
+<head>
+  <title>Ultra to Blitz</title>
+</head>
+
+<body>
+  <h1>Convert an Ultra Run to its equivalent Blitz score</h1>
+  Paste in the Scoring Playlist into the text field: (fortissim2's WR ultra is pre-included as an example)
+  <br>
+  <textarea id="ultra" name="ultra" rows="40" cols="26"></textarea>
+  <br>
+  <button type="button" onclick="ultra_to_blitz()">Ultra to Blitz</button>
+  <br>
+  <textarea id="output_1" name="output_1"></textarea>
+  <br>
+  <h1>Convert a Blitz Replay to its equivalent Ultra score (approximate)</h1>
+  <input type="file" id="file-selector" accept=".ttr" onchange="loadFile()" />
+  <br>
+  <textarea id="output_2" name="output_2" cols="40"></textarea>
+
+
+</body>
+
 </html>

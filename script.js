@@ -274,13 +274,13 @@ function ultra_to_blitz() {
         let action = action_full.split("\t")[1];
         // console.log(action);
         let indLines = 0;
-        
-        indLines = actionLines[action]
-        
+
+        indLines = actionLines[action];
+
         if (indLines == undefined) {
             indLines = 0;
         }
-            
+
         lines += indLines;
 
         currLevel = level(lines);
@@ -288,28 +288,90 @@ function ultra_to_blitz() {
         let indScore = 0;
         indScore = actionScores[action];
         if (indScore == undefined) {
-            indScore = 0
+            indScore = 0;
             if (action.includes("COMBO")) {
                 combo = parseInt(action.substring(6));
                 indScore = 50 * combo;
             }
-                
         }
-        
-        if ((action.includes("TSPIN")) || (action.includes("CLEAR4"))) {
+
+        if (action.includes("TSPIN") || action.includes("CLEAR4")) {
             if (b2b) indScore *= 1.5;
             b2b = true;
-        }
-        else {
+        } else {
             b2b = false;
         }
-            
-        
+
         score += indScore * currLevel;
         // console.log(indScore)
-
     }
 
-    document.getElementById("output").value = `Score: ${score}\nLevel: ${currLevel}`;
+    document.getElementById(
+        "output_1"
+    ).value = `Score: ${score}\nLevel: ${currLevel}`;
+}
 
+function loadFile() {
+    const [file] = document.querySelector("input[type=file]").files;
+    const reader = new FileReader();
+
+    reader.addEventListener(
+        "load",
+        () => {
+            // this will then display a text file
+            // console.log(reader.result);
+            let replay = JSON.parse(reader.result);
+
+            let clears = replay["endcontext"]["clears"];
+
+            let score = replay["endcontext"]["piecesplaced"] * 40; // assume everything is hard dropped from very top
+
+            score += clears["singles"] * 100;
+            score += clears["doubles"] * 300;
+            score += clears["triples"] * 500;
+            score += clears["quads"] * 800;
+            score += clears["minitspins"] * 100;
+            score += clears["realtspins"] * 400;
+            score += clears["minitspinsingles"] * 200;
+            score += clears["tspinsingles"] * 800;
+            score += clears["minitspindoubles"] * 1200; // jstris counts mini tsds as normal tsds
+            score += clears["tspindoubles"] * 1200;
+            score += clears["tspintriples"] * 1600;
+            score += clears["tspinquads"] * 1600;
+            score += clears["allclear"] * 3000;
+
+            document.getElementById(
+                "output_2"
+            ).value = `assuming no b2b: ${score}`;
+
+            score = replay["endcontext"]["piecesplaced"] * 40;
+
+            score += clears["singles"] * 100;
+            score += clears["doubles"] * 300;
+            score += clears["triples"] * 500;
+            score += clears["quads"] * 800 * 1.5;
+            score += clears["minitspins"] * 100 * 1.5;
+            score += clears["realtspins"] * 400 * 1.5;
+            score += clears["minitspinsingles"] * 200 * 1.5;
+            score += clears["tspinsingles"] * 800 * 1.5;
+            score += clears["minitspindoubles"] * 1200 * 1.5;
+            score += clears["tspindoubles"] * 1200 * 1.5;
+            score += clears["tspintriples"] * 1600 * 1.5;
+            score += clears["tspinquads"] * 1600 * 1.5;
+            score += clears["allclear"] * 3000;
+
+            document.getElementById(
+                "output_2"
+            ).value += `\nassuming all b2b: ${score}`;
+        },
+        false
+    );
+
+    if (file) {
+        if (file.type && file.type != "text/ttr") {
+            console.log("File is not a ttr.", file.type, file);
+            return;
+        }
+        reader.readAsText(file);
+    }
 }
